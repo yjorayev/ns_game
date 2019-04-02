@@ -1,59 +1,63 @@
-import { BoardState, Location } from "./Board";
+import { BoardState, IFigure } from "./Board";
+import { Location } from "./Location";
+import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from "./Move";
 
-export class BoardStateTransitionManager{
-    private possibleMoves: IMove[];
-    private possibleSwaps: IMove[];
+export class BoardStateTransitionManager {
+  private directions: StepDescriptor[] = [
+    new StepDescriptor(-1, 0), //UP
+    new StepDescriptor(0, 1), //RIGHT
+    new StepDescriptor(1, 0), //DOWN
+    new StepDescriptor(0, -1) //LEFT
+  ];
 
-    public getMovesFor(location: Location, boardState: BoardState): IMove[]{
-        let standard = this.getStandardMoves(location, boardState);
-        let swap = this.getSwapMoves(location, boardState);
-        let moves = standard.concat(swap);
-        return moves;
+  public getMovesFor(
+    location: Location,
+    figure: IFigure,
+    boardState: BoardState
+  ): MoveDescriptor[] {
+    let moves: MoveDescriptor[] = [];
+    for(let dir of this.directions){
+        moves.push(...this.getMovesByDirection(location, dir, figure, boardState));
     }
+    return moves;
+  }
 
-    private getStandardMoves(location: Location, boardState: BoardState): IMove[]{
-        let moves = [];
-        
-    }
+  private getMovesByDirection(
+    location: Location,
+    direction: StepDescriptor,
+    figure: IFigure,
+    boardState: BoardState
+  ): MoveDescriptor[] {
+    let moves = [];
+    let newLocation = location.shift(direction);
+    let newFigure = boardState.getFigure(newLocation);
 
-    private getSwapMoves(location: Location, boardState: BoardState): IMove[]{
-        
-    }
+    while (boardState.isLocationOnBoard(newLocation)) {
+        if(newFigure.isLandable){
+            moves.push(new StandardMoveDescriptor(location, newLocation, figure));
+        }
 
-    private getMovesByDirection(location: Location, direction: Direction, boardState: BoardState): IMove[]{
+        if(newFigure.isSwappable){
+            moves.push(new SwapMoveDescriptor(location, newLocation, figure));
+        }
+
+        if(newFigure.isJumpable){
+        newLocation = location.shift(direction);
+        newFigure = boardState.getFigure(newLocation);
+        } else{
+            break;
+        }
     }
+    return moves;
+  }
 }
 
-export class StandardMove implements IMove{
-    move(from: Location, to: Location, boardState: BoardState): BoardState {
-        let figure = boardState.values[from.row][from.column];
-        boardState = figure.move(from, to, boardState);
+export class StepDescriptor {
+  rowPush: number;
+  columnPush: number;
 
-        return boardState;
-    }
-} 
-
-export class SwapMove implements IMove{
-    move(from: Location, to: Location, boardState: BoardState): BoardState {
-        let figure = boardState.values[from.row][from.column];
-        boardState = figure.swap(from, to, boardState);
-
-        return boardState;
-    }
-}
-
-export interface IMove{
-    move(from: Location, to: Location, boardState: BoardState): BoardState;
-}
-
-enum Direction{
-    UP,
-    RIGHT,
-    DOWN,
-    LEFT
-}
-
-class Step{
-    private direction: Direction;
-    private stepLength: number;
+  constructor(row: number, column: number) {
+    this.rowPush = row;
+    this.columnPush = column;
+  }
 }
