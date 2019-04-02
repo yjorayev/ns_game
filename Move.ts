@@ -1,5 +1,6 @@
-import { BoardState, IFigure } from "./Board";
+import { BoardState } from "./Board";
 import { Location } from './Location';
+import { IFigure } from "./Figures/IFigure.interface";
 
 export abstract class MoveDescriptor {
     private from: Location;
@@ -30,8 +31,6 @@ export abstract class MoveDescriptor {
     move(from: Location, to: Location, boardState: BoardState): BoardState {
       let figure = boardState.getFigure(from);
       boardState = this.moveAction(from, to, boardState);
-      //figure.swap(from, to, boardState);
-  
       return boardState;
     }
   }

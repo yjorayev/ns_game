@@ -1,6 +1,7 @@
-import { BoardState, IFigure } from "./Board";
+import { BoardState } from "./Board";
 import { Location } from "./Location";
 import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from "./Move";
+import { IFigure } from "./Figures/IFigure.interface";
 
 export class BoardStateTransitionManager {
   private directions: StepDescriptor[] = [

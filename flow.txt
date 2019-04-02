@@ -1,0 +1,6 @@
+1. click on figure
+2. get moves for figure
+3. pick move
+4. execute move
+5. execute moveEffects: special figures, regular disappearance
+6. go to 1
