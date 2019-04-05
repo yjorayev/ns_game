@@ -1,7 +1,8 @@
-import { BoardState } from "./Board";
-import { Location } from "./Location";
-import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from "./Move";
-import { IFigure } from "./Figures/IFigure.interface";
+import { BoardState } from './Board';
+import { Location } from '../src/app/common/classes/Location';
+import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from './Move';
+import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
+import { StepDescriptor } from 'src/app/common/classes/StepDescriptor';
 
 export class BoardStateTransitionManager {
   private directions: StepDescriptor[] = [
@@ -16,8 +17,8 @@ export class BoardStateTransitionManager {
     figure: IFigure,
     boardState: BoardState
   ): MoveDescriptor[] {
-    let moves: MoveDescriptor[] = [];
-    for(let dir of this.directions){
+    const moves: MoveDescriptor[] = [];
+    for (const dir of this.directions){
         moves.push(...this.getMovesByDirection(location, dir, figure, boardState));
     }
     return moves;
@@ -29,20 +30,20 @@ export class BoardStateTransitionManager {
     figure: IFigure,
     boardState: BoardState
   ): MoveDescriptor[] {
-    let moves = [];
+    const moves = [];
     let newLocation = location.shift(direction);
     let newFigure = boardState.getFigure(newLocation);
 
     while (boardState.isLocationOnBoard(newLocation)) {
-        if(newFigure.isLandable){
+        if (newFigure.isLandable){
             moves.push(new StandardMoveDescriptor(location, newLocation, figure));
         }
 
-        if(newFigure.isSwappable){
+        if (newFigure.isSwappable){
             moves.push(new SwapMoveDescriptor(location, newLocation, figure));
         }
 
-        if(newFigure.isJumpable){
+        if (newFigure.isJumpable){
         newLocation = location.shift(direction);
         newFigure = boardState.getFigure(newLocation);
         } else{
@@ -53,12 +54,4 @@ export class BoardStateTransitionManager {
   }
 }
 
-export class StepDescriptor {
-  rowPush: number;
-  columnPush: number;
 
-  constructor(row: number, column: number) {
-    this.rowPush = row;
-    this.columnPush = column;
-  }
-}

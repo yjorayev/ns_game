@@ -1,0 +1,4 @@
+<div *ngFor='let row of values; let x = index'>
+    <span *ngFor='let column of values[x]; let y = index' [ngClass]="{'cell': true}">
+    </span>
+</div>

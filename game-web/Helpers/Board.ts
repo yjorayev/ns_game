@@ -1,5 +1,6 @@
-import { Location } from "./Location";
-import { IFigure } from "./Figures/IFigure.interface";
+import { Location } from '../src/app/common/classes/Location';
+import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
+
 
 export class BoardState {
   private rows: number;
@@ -17,6 +18,6 @@ export class BoardState {
   }
 
   public isLocationOnBoard(location: Location): boolean {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }
