@@ -6,4 +6,8 @@ export class StepDescriptor {
     this.rowPush = row;
     this.columnPush = column;
   }
+
+  equals(item: StepDescriptor): boolean{
+    return this.rowPush === item.rowPush && this.columnPush === item.columnPush;
+  }
 }

@@ -4,7 +4,8 @@ import { BoardComponent } from './board/board.component';
 
 const routes: Routes = [
   {path: 'home', component: BoardComponent},
-  {path: '*', redirectTo: './home'}
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: '**', redirectTo: '/home', pathMatch: 'full'}
 ];
 
 @NgModule({

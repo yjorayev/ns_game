@@ -1,5 +1,5 @@
-export enum FigureTypes {
+export enum FigureType {
   FROG,
-  BARRIER,
+  OBSTACLE,
   NULL
 }

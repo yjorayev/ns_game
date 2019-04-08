@@ -2,7 +2,7 @@ import { Location } from '../src/app/common/classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 
 
-export class BoardState {
+export class BoardStateOld {
   private rows: number;
   private columns: number;
 
