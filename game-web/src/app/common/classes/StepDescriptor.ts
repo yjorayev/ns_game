@@ -1,4 +1,4 @@
-export class StepDescriptor {
+export class DirectionDescriptor {
   rowPush: number;
   columnPush: number;
 
@@ -7,7 +7,7 @@ export class StepDescriptor {
     this.columnPush = column;
   }
 
-  equals(item: StepDescriptor): boolean{
+  equals(item: DirectionDescriptor): boolean{
     return this.rowPush === item.rowPush && this.columnPush === item.columnPush;
   }
 }

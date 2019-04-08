@@ -1,12 +1,12 @@
-import { StepDescriptor } from './StepDescriptor';
+import { DirectionDescriptor } from './StepDescriptor';
 import { Location } from './Location';
 
-export class JumpDescriptor {
+export class StepDescriptor {
     location: Location;
     canChangeDirection: boolean;
-    currentDirection: StepDescriptor;
+    currentDirection: DirectionDescriptor;
 
-    constructor(location: Location, canChangeDirection: boolean, currentDirection: StepDescriptor){
+    constructor(location: Location, canChangeDirection: boolean, currentDirection: DirectionDescriptor){
         this.location = location;
         this.canChangeDirection = canChangeDirection;
         this.currentDirection = currentDirection;

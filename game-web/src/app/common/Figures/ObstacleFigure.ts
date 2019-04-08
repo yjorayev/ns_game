@@ -2,7 +2,7 @@ import { Location } from '../classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { JumpDescriptor } from '../classes/JumpDescriptor';
+import { StepDescriptor } from '../classes/JumpDescriptor';
 import { BoardState } from '../classes/BoardState';
 
 export class Obstacle implements IFigure {
@@ -30,7 +30,7 @@ export class Obstacle implements IFigure {
     return boardState;
   }
 
-  jump(jump: JumpDescriptor, boardState: BoardState): JumpDescriptor {
+  jump(jump: StepDescriptor, boardState: BoardState): StepDescriptor {
     return null;
   }
 }

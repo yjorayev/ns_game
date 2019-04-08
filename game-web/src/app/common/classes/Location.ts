@@ -1,4 +1,4 @@
-import { StepDescriptor } from './StepDescriptor';
+import { DirectionDescriptor } from './StepDescriptor';
 
 export class Location {
     row: number;
@@ -9,7 +9,7 @@ export class Location {
         this.column = column;
     }
 
-    public shift(step: StepDescriptor): Location {
-        return new Location(this.row + step.rowPush, this.column + step.columnPush);
+    public shift(direction: DirectionDescriptor): Location {
+        return new Location(this.row + direction.rowPush, this.column + direction.columnPush);
     }
   }

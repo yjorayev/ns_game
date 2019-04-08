@@ -2,7 +2,7 @@ import { Location } from '../classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { JumpDescriptor } from '../classes/JumpDescriptor';
+import { StepDescriptor } from '../classes/JumpDescriptor';
 import { BoardState } from '../classes/BoardState';
 
 export class NullFigure implements IFigure {
@@ -30,12 +30,12 @@ export class NullFigure implements IFigure {
     return boardState;
   }
 
-  jump(jump: JumpDescriptor, boardState: BoardState): JumpDescriptor {
+  jump(jump: StepDescriptor, boardState: BoardState): StepDescriptor {
     const loc = jump.location.shift(jump.currentDirection);
     const figure = boardState.getFigure(loc);
 
     if (figure.isLandable) {
-      return new JumpDescriptor(loc, jump.canChangeDirection, jump.currentDirection);
+      return new StepDescriptor(loc, jump.canChangeDirection, jump.currentDirection);
     }
 
     return null;

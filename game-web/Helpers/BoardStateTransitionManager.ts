@@ -1,15 +1,15 @@
-import { BoardState } from './Board';
 import { Location } from '../src/app/common/classes/Location';
 import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from './Move';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
-import { StepDescriptor } from 'src/app/common/classes/StepDescriptor';
+import { DirectionDescriptor } from 'src/app/common/classes/StepDescriptor';
+import { BoardState } from 'src/app/common/classes/BoardState';
 
 export class BoardStateTransitionManager {
-  private directions: StepDescriptor[] = [
-    new StepDescriptor(-1, 0), //UP
-    new StepDescriptor(0, 1), //RIGHT
-    new StepDescriptor(1, 0), //DOWN
-    new StepDescriptor(0, -1) //LEFT
+  private directions: DirectionDescriptor[] = [
+    new DirectionDescriptor(-1, 0), // UP
+    new DirectionDescriptor(0, 1), // RIGHT
+    new DirectionDescriptor(1, 0), // DOWN
+    new DirectionDescriptor(0, -1) // LEFT
   ];
 
   public getMovesFor(
@@ -18,7 +18,7 @@ export class BoardStateTransitionManager {
     boardState: BoardState
   ): MoveDescriptor[] {
     const moves: MoveDescriptor[] = [];
-    for (const dir of this.directions){
+    for (const dir of this.directions) {
         moves.push(...this.getMovesByDirection(location, dir, figure, boardState));
     }
     return moves;
@@ -26,7 +26,7 @@ export class BoardStateTransitionManager {
 
   private getMovesByDirection(
     location: Location,
-    direction: StepDescriptor,
+    direction: DirectionDescriptor,
     figure: IFigure,
     boardState: BoardState
   ): MoveDescriptor[] {
@@ -34,19 +34,19 @@ export class BoardStateTransitionManager {
     let newLocation = location.shift(direction);
     let newFigure = boardState.getFigure(newLocation);
 
-    while (boardState.isLocationOnBoard(newLocation)) {
-        if (newFigure.isLandable){
+    while (boardState.isLocationValid(newLocation)) {
+        if (newFigure.isLandable) {
             moves.push(new StandardMoveDescriptor(location, newLocation, figure));
         }
 
-        if (newFigure.isSwappable){
+        if (newFigure.isSwappable) {
             moves.push(new SwapMoveDescriptor(location, newLocation, figure));
         }
 
-        if (newFigure.isJumpable){
+        if (newFigure.isJumpable) {
         newLocation = location.shift(direction);
         newFigure = boardState.getFigure(newLocation);
-        } else{
+        } else {
             break;
         }
     }
