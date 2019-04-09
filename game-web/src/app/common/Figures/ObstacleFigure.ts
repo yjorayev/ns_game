@@ -16,6 +16,9 @@ export class Obstacle implements IFigure {
   constructor(color: Color) {
     this.type = FigureType.OBSTACLE;
     this.color = color;
+    this.isJumpable = false;
+    this.isSwappable = false;
+    this.isLandable = false;
   }
 
   getPossibleMoves(): Location[] {
@@ -31,6 +34,6 @@ export class Obstacle implements IFigure {
   }
 
   jump(jump: StepDescriptor, boardState: BoardState): StepDescriptor {
-    return null;
+    throw new Error('Method not implemented.');
   }
 }

@@ -17,7 +17,7 @@ export class Frog implements IFigure {
     this.type = FigureType.FROG;
     this.isStatic = isStatic;
     this.isLandable = false;
-    this.isJumpable = true;
+    this.isJumpable = false;
     this.isSwappable = true;
     this.color = color;
   }
@@ -50,7 +50,7 @@ export class Frog implements IFigure {
   }
 
   jump(jump: StepDescriptor, boardState: BoardState): StepDescriptor {
-    return null;
+    throw new Error('should not be jumping over Frog');
   }
 
   private afterMove(location: Location, boardState: BoardState): BoardState {

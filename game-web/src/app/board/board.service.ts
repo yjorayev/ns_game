@@ -49,61 +49,49 @@ export class BoardService {
       }
 
       queue.pop();
-      // queue.push(...this.getNextItems(lastItem, boardState));
       queue = this.AddNextLocationsToQueue(lastItem, boardState, queue);
     }
 
     return null;
   }
 
-  private AddNextLocationsToQueue(
-    item: QueueItem,
-    boardState: BoardState,
-    queue: QueueItem[]
-  ): QueueItem[] {
-    const currentFigure = boardState.getFigure(item.step.location);
+  private AddNextLocationsToQueue(item: QueueItem, boardState: BoardState, queue: QueueItem[]): QueueItem[] {
     if (item.step.canChangeDirection) {
-      queue = this.GetNextLocationWhenCanChangeDirection(
-        item,
-        boardState,
-        queue
-      );
+      queue = this.GetNextLocationWhenCanChangeDirection(item, boardState, queue);
     } else {
-      queue = this.GetNextLocationWhenCannotChangeDirection(
-        item,
-        boardState,
-        queue
-      );
+      queue = this.GetNextLocationWhenCannotChangeDirection(item, boardState, queue);
     }
 
     return queue;
   }
 
-  private GetNextLocationWhenCanChangeDirection(
-    item: QueueItem,
-    boardState: BoardState,
-    queue: QueueItem[]
-  ): QueueItem[] {
+  private GetNextLocationWhenCanChangeDirection(item: QueueItem, boardState: BoardState, queue: QueueItem[]): QueueItem[] {
     for (const dir of this.directions) {
-      const nextLocation = item.step.location.shift(dir);
-      if (boardState.isLocationValid(nextLocation)) {
-        const nextFigure = boardState.getFigure(nextLocation);
-        if (nextFigure.isLandable) {
-          queue.push(this.GetNextWhenLandable(item, nextLocation, dir));
-        } else if (nextFigure.isJumpable) {
-          queue.push(
-            this.GetNextWhenJumpable(
-              item,
-              nextLocation,
-              nextFigure,
-              boardState,
-              dir
-            )
-          );
-        }
-
-        return queue;
+      if (!item.step.currentDirection) {
+        item.step.currentDirection = dir;
       }
+
+      const items = this.GetNextLocationByDirection(item, boardState, queue, dir);
+      queue = queue.concat(items);
+    }
+    return queue;
+  }
+
+  private GetNextLocationWhenCannotChangeDirection(item: QueueItem, boardState: BoardState, queue: QueueItem[]): QueueItem[] {
+    return this.GetNextLocationByDirection(item, boardState, queue, item.step.currentDirection);
+  }
+
+  private GetNextLocationByDirection(item: QueueItem, boardState: BoardState, queue: QueueItem[], dir: DirectionDescriptor): QueueItem[] {
+    const nextLocation = item.step.location.shift(dir);
+    if (boardState.isLocationValid(nextLocation)) {
+      const nextFigure = boardState.getFigure(nextLocation);
+      if (nextFigure.isLandable) {
+        queue.push(this.GetNextWhenLandable(item, nextLocation, dir));
+      } else if (nextFigure.isJumpable) {
+        queue.push(this.GetNextWhenJumpable(item, nextLocation, nextFigure, boardState, dir));
+      }
+
+      return queue;
     }
   }
 
@@ -135,8 +123,7 @@ export class BoardService {
     nextLocation: Location,
     nextFigure: IFigure,
     boardState: BoardState,
-    dir: DirectionDescriptor
-  ): QueueItem {
+    dir: DirectionDescriptor): QueueItem {
     const directionChanged = !item.step.currentDirection.equals(dir);
     let step = new StepDescriptor(nextLocation, !directionChanged, dir);
     step = nextFigure.jump(step, boardState);
@@ -150,41 +137,6 @@ export class BoardService {
 
     return { step, path };
   }
-
-  // private getNextItems(item: QueueItem, boardState: BoardState): QueueItem[] {
-  //     //
-  //     //totally wrong algorithm
-  //     //
-  //     const figure = boardState.getFigure(item.jump.location);
-  //     const items: QueueItem[] = [];
-  //     if (item.jump.canChangeDirection) {
-  //         for (const dir of this.directions) {
-  //             if (!item.jump.currentDirection) {
-  //                 item.jump.currentDirection = dir;
-  //             }
-
-  //             if (figure.isJumpable) {
-  //                 const jump = figure.jump(item.jump, boardState);
-  //                 if (jump) {
-  //                     const canChangeDirection = item.jump.currentDirection.equals(dir) ? true : false;
-  //                     const path = canChangeDirection ?
-  //                         new Path(item.path.from, jump.location)
-  //                         : new Path(item.path.from, jump.location, item.path.to);
-
-  //                     items.push({
-  //                         jump: { location: jump.location, currentDirection: jump.currentDirection, canChangeDirection },
-  //                         path
-  //                     });
-  //                 }
-  //             }
-  //         }
-  //     } else {
-  //         const jump = figure.jump(item.jump, boardState);
-  //         const path = item.path;
-  //         items.push({ jump, path });
-  //     }
-  //     return items.filter(i => boardState.isLocationValid(i.jump.location));
-  // }
 
   private createBoolean2DArray(rows: number, cols: number): boolean[][] {
     const arr = [];

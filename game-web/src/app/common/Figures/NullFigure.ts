@@ -16,6 +16,9 @@ export class NullFigure implements IFigure {
   constructor() {
     this.type = FigureType.NULL;
     this.color = Color.NULL;
+    this.isJumpable = false;
+    this.isSwappable = false;
+    this.isLandable = true;
   }
 
   getPossibleMoves(): Location[] {
@@ -31,13 +34,6 @@ export class NullFigure implements IFigure {
   }
 
   jump(jump: StepDescriptor, boardState: BoardState): StepDescriptor {
-    const loc = jump.location.shift(jump.currentDirection);
-    const figure = boardState.getFigure(loc);
-
-    if (figure.isLandable) {
-      return new StepDescriptor(loc, jump.canChangeDirection, jump.currentDirection);
-    }
-
-    return null;
+    throw new Error('Should not be jumping over empty cell cause it is landable');
   }
 }
