@@ -1,9 +1,9 @@
-<div *ngFor='let row of values; let x = index'>
-    <div *ngFor='let column of values[x]; let y = index' [ngClass]="{'cell': true}">
-        <div [ngSwitch]='values[x][y].type' (click)='activateFigure(x, y)' (mouseover)='getPathTo(x, y)'>
-            <div *ngSwitchCase='0' class="{{values[x][y].color}}">F</div>
-            <div *ngSwitchCase='1' class="{{values[x][y].color}}">X</div>
-            <div *ngSwitchCase='2' class="{{values[x][y].color}}"></div>
+<div *ngFor='let row of boardState.values; let x = index'>
+    <div *ngFor='let column of boardState.values[x]; let y = index' [ngClass]="{'cell': true}">
+        <div [ngSwitch]='boardState.values[x][y].type' (click)='activateFigure(x, y)' (mouseover)='getPathTo(x, y)'>
+            <div *ngSwitchCase='0' class="{{boardState.values[x][y].color}}">F</div>
+            <div *ngSwitchCase='1' class="{{boardState.values[x][y].color}}">X</div>
+            <div *ngSwitchCase='2' class="{{boardState.values[x][y].color}}"></div>
         </div>
     </div>
 </div>

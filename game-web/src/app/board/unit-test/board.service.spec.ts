@@ -1,7 +1,6 @@
 import { BoardService } from '../board.service';
 import { Color } from 'src/app/common/enums/color.enum';
 import { FigureType } from 'src/app/common/enums/figureTypes.enum';
-import { BoardComponent } from '../board.component';
 import { Location} from '../../common/classes/Location';
 import { BoardState } from 'src/app/common/classes/BoardState';
 
@@ -35,7 +34,7 @@ describe('Board Service', () => {
         }
     });
 
-    it('can get correct path', () => {
+    fit('can get correct path', () => {
         const path = service.getPath(board, new Location(1, 1), new Location(8, 8));
         expect(path).toBeTruthy();
         expect(path.from.row).toEqual(1);
@@ -46,4 +45,16 @@ describe('Board Service', () => {
         expect(path.midPoint.column).toEqual(8);
 
     });
+
+    it('can get correct path', () => {
+      const path = service.getPath(board, new Location(1, 1), new Location(3, 3));
+      expect(path).toBeTruthy();
+      expect(path.from.row).toEqual(1);
+      expect(path.from.column).toEqual(1);
+      expect(path.to.row).toEqual(3);
+      expect(path.to.column).toEqual(3);
+      expect(path.midPoint.row).toEqual(1);
+      expect(path.midPoint.column).toEqual(3);
+
+  });
 });
