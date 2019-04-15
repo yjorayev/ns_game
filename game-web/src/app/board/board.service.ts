@@ -31,7 +31,7 @@ export class BoardService {
   }
 
   public getPath(boardState: BoardState, from: Location, to: Location): Path {
-    const visited: Location[] = [];
+    const visited: StepDescriptor[] = [];
     let queue = [
       {
         step: { location: from, canChangeDirection: true },
@@ -39,7 +39,7 @@ export class BoardService {
       } as QueueItem
     ];
 
-    visited.push(from);
+    visited.push(new StepDescriptor(from, true, null));
 
     while (queue.length > 0) {
       const lastItem = queue[queue.length - 1];
@@ -52,25 +52,45 @@ export class BoardService {
       }
 
       queue.pop();
-      const nextItems = this.AddNextLocationsToQueue(lastItem, boardState, visited);
+      const nextItems = this.AddNextLocationsToQueue(
+        lastItem,
+        boardState,
+        visited
+      );
       queue = queue.concat(nextItems);
     }
 
     return null;
   }
 
-  private AddNextLocationsToQueue(item: QueueItem, boardState: BoardState, visited: Location[]): QueueItem[] {
+  private AddNextLocationsToQueue(
+    item: QueueItem,
+    boardState: BoardState,
+    visited: StepDescriptor[]
+  ): QueueItem[] {
     let queue: QueueItem[] = [];
     if (item.step.canChangeDirection) {
-      queue = this.GetNextLocationWhenCanChangeDirection(item, boardState, visited);
+      queue = this.GetNextLocationWhenCanChangeDirection(
+        item,
+        boardState,
+        visited
+      );
     } else {
-      queue = this.GetNextLocationWhenCannotChangeDirection(item, boardState, visited);
+      queue = this.GetNextLocationWhenCannotChangeDirection(
+        item,
+        boardState,
+        visited
+      );
     }
 
     return queue;
   }
 
-  private GetNextLocationWhenCanChangeDirection(item: QueueItem, boardState: BoardState, visited: Location[]): QueueItem[] {
+  private GetNextLocationWhenCanChangeDirection(
+    item: QueueItem,
+    boardState: BoardState,
+    visited: StepDescriptor[]
+  ): QueueItem[] {
     let queue: QueueItem[] = [];
     let isDirectionSet = false;
     if (item.step.currentDirection) {
@@ -80,96 +100,72 @@ export class BoardService {
     for (const dir of this.directions) {
       if (!isDirectionSet) {
         item.step.currentDirection = dir;
+        visited[0].currentDirection = dir;
       }
 
-      queue = queue.concat(this.GetNextLocationByDirection(item, boardState, dir, visited));
+      queue = queue.concat(
+        this.GetNextLocationByDirection(item, boardState, dir, visited)
+      );
     }
     return queue;
   }
 
-  private GetNextLocationWhenCannotChangeDirection(item: QueueItem, boardState: BoardState, visited: Location[]): QueueItem[] {
-    return this.GetNextLocationByDirection(item, boardState, item.step.currentDirection, visited);
+  private GetNextLocationWhenCannotChangeDirection(
+    item: QueueItem,
+    boardState: BoardState,
+    visited: StepDescriptor[]
+  ): QueueItem[] {
+    return this.GetNextLocationByDirection(
+      item,
+      boardState,
+      item.step.currentDirection,
+      visited
+    );
   }
 
-  private GetNextLocationByDirection(item: QueueItem, boardState: BoardState, dir: DirectionDescriptor, visited: Location[]): QueueItem[] {
+  private GetNextLocationByDirection(
+    item: QueueItem,
+    boardState: BoardState,
+    dir: DirectionDescriptor,
+    visited: StepDescriptor[]
+  ): QueueItem[] {
     const queue: QueueItem[] = [];
     const nextLocation = item.step.location.shift(dir);
-    if (!this.isInList(visited, nextLocation) && boardState.isLocationValid(nextLocation)) {
+    const directionChanged = !item.step.currentDirection.equals(dir);
+    let step = new StepDescriptor(nextLocation, item.step.canChangeDirection && !directionChanged, dir);
+
+    if (!this.isInList(visited, step) && boardState.isLocationValid(nextLocation)) {
       const nextFigure = boardState.getFigure(nextLocation);
+      const path = this.BuildPathByStep(directionChanged, item, step);
+
       if (nextFigure.isLandable) {
-        const newItem = this.GetNextWhenLandable(item, nextLocation, dir);
-        queue.push(newItem);
-        visited.push(nextLocation);
-        console.log('adding location: ', nextLocation.row, nextLocation.column);
-        console.log('adding path: ',
-          newItem.path.from.row, newItem.path.from.column,
-          newItem.path.to.row, newItem.path.to.column,
-          newItem.path.midPoint );
-      } else if (nextFigure.isJumpable) {
-        const newItem = this.GetNextWhenJumpable(item, nextLocation, nextFigure, boardState, dir);
-        queue.push(newItem);
-        visited.push(nextLocation);
+        this.addToQueue(step, path, queue, visited);
+      }
+      if (nextFigure.isJumpable) {
+        step = nextFigure.jump(step, boardState);
+        this.addToQueue(step, path, queue, visited);
       }
     }
     return queue;
   }
 
-  private GetNextWhenLandable(
-    item: QueueItem,
-    nextLocation: Location,
-    dir: DirectionDescriptor
-  ): QueueItem {
-    const directionChanged = !item.step.currentDirection.equals(dir);
-    let path: Path;
-    if (directionChanged) {
-      path = new Path(item.path.from, nextLocation, item.path.to);
-    } else {
-      path = new Path(item.path.from, nextLocation, item.path.midPoint);
-    }
-
-    return {
-      step: {
-        location: nextLocation,
-        canChangeDirection: item.step.canChangeDirection && !directionChanged,
-        currentDirection: dir
-      },
-      path
-    } as QueueItem;
-  }
-
-  private GetNextWhenJumpable(
-    item: QueueItem,
-    nextLocation: Location,
-    nextFigure: IFigure,
-    boardState: BoardState,
-    dir: DirectionDescriptor): QueueItem {
-    const directionChanged = !item.step.currentDirection.equals(dir);
-    let step = new StepDescriptor(nextLocation, !directionChanged, dir);
-    step = nextFigure.jump(step, boardState);
-
+  private BuildPathByStep(directionChanged: boolean, item: QueueItem, step: StepDescriptor): Path {
     let path: Path;
     if (directionChanged) {
       path = new Path(item.path.from, step.location, item.path.to);
     } else {
       path = new Path(item.path.from, step.location, item.path.midPoint);
     }
-
-    return { step, path };
+    return path;
   }
 
-  private isInList(list: Location[], item: Location): boolean{
-    return list.findIndex(i => item.column === i.column && item.row === i.row) > -1;
+  private addToQueue(step: StepDescriptor, path: Path, queue: QueueItem[], visited: StepDescriptor[]): void {
+    queue.push({ step, path });
+    visited.push(step);
   }
 
-  private createBoolean2DArray(rows: number, cols: number): boolean[][] {
-    const arr = [];
-    for (let i = 0; i < rows; i++) {
-      arr[i] = [];
-      for (let j = 0; j < cols[i].length; j++) {
-        arr[i][j] = false;
-      }
-    }
-    return arr;
+  private isInList(list: StepDescriptor[], item: StepDescriptor): boolean {
+    return list.findIndex(i => item.equals(i)) > -1;
   }
 
   public createFigure(type: FigureType, color: Color): IFigure {

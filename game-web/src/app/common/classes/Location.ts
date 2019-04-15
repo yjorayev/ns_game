@@ -12,4 +12,8 @@ export class Location {
     public shift(direction: DirectionDescriptor): Location {
         return new Location(this.row + direction.rowPush, this.column + direction.columnPush);
     }
+
+    public equals(location: Location): boolean{
+      return this.row === location.row && this.column === location.column;
+    }
   }

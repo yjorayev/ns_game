@@ -46,3 +46,15 @@ export class SwapMoveDescriptor extends MoveDescriptor {
       super(from, to, targetFigure.swap);
     }
   }
+
+
+
+  // console.log('adding location: ', step.location.row, step.location.column);
+  // console.log(
+  //   'adding path: ',
+  //   path.from.row,
+  //   path.from.column,
+  //   path.to.row,
+  //   path.to.column,
+  //   path.midPoint
+  // );
