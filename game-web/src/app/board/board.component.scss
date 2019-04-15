@@ -9,23 +9,27 @@
     text-align: center;
 }
 
-.red{
+.active {
+    background-color: coral;
+}
+
+.red {
     color: red;
 }
 
-.yellow{
+.yellow {
     color: yellow;
 }
 
-.blue{
+.blue {
     color: blue;
 }
 
-.green{
-    color:green; 
+.green {
+    color: green;
 }
 
-.jokerColor{
+.jokerColor {
     background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
     -webkit-background-clip: text;
     color: transparent;

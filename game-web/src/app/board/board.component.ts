@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '../common/classes/Location';
 import { BoardService } from './board.service';
 import { BoardState } from '../common/classes/BoardState';
+import { Path } from '../common/classes/Path';
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
@@ -27,7 +28,7 @@ export class BoardComponent implements OnInit {
   }
 
   public activateFigure(row: number, col: number): void {
-    if (this.currentActiveFigureLocation === null) {
+    if (!this.currentActiveFigureLocation) {
       this.currentActiveFigureLocation = new Location(row, col);
     } else {
 
@@ -35,9 +36,15 @@ export class BoardComponent implements OnInit {
   }
 
   public getPathTo(row: number, col: number): void {
-    if (this.currentActiveFigureLocation !== null) {
+    if (this.currentActiveFigureLocation) {
       const path = this.boardService.getPath(this.boardState, this.currentActiveFigureLocation, new Location(row, col));
+      console.log(row, col);
+      this.drawPath(path);
     }
+  }
+
+  private drawPath(path: Path): void{
+
   }
 }
 
