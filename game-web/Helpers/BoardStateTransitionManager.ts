@@ -1,7 +1,7 @@
 import { Location } from '../src/app/common/classes/Location';
-import { MoveDescriptor, StandardMoveDescriptor, SwapMoveDescriptor } from './Move';
+import { MoveDescriptor } from './Move';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
-import { DirectionDescriptor } from 'src/app/common/classes/StepDescriptor';
+import { DirectionDescriptor } from 'src/app/common/classes/DirectionDescriptor';
 import { BoardState } from 'src/app/common/classes/BoardState';
 
 export class BoardStateTransitionManager {
@@ -31,25 +31,25 @@ export class BoardStateTransitionManager {
     boardState: BoardState
   ): MoveDescriptor[] {
     const moves = [];
-    let newLocation = location.shift(direction);
-    let newFigure = boardState.getFigure(newLocation);
+    // let newLocation = location.shift(direction);
+    // let newFigure = boardState.getFigure(newLocation);
 
-    while (boardState.isLocationValid(newLocation)) {
-        if (newFigure.isLandable) {
-            moves.push(new StandardMoveDescriptor(location, newLocation, figure));
-        }
+    // while (boardState.isLocationValid(newLocation)) {
+    //     if (newFigure.isLandable) {
+    //         moves.push(new StandardMoveDescriptor(location, newLocation, figure));
+    //     }
 
-        if (newFigure.isSwappable) {
-            moves.push(new SwapMoveDescriptor(location, newLocation, figure));
-        }
+    //     if (newFigure.isSwappable) {
+    //         moves.push(new SwapMoveDescriptor(location, newLocation, figure));
+    //     }
 
-        if (newFigure.isJumpable) {
-        newLocation = location.shift(direction);
-        newFigure = boardState.getFigure(newLocation);
-        } else {
-            break;
-        }
-    }
+    //     if (newFigure.isJumpable) {
+    //     newLocation = location.shift(direction);
+    //     newFigure = boardState.getFigure(newLocation);
+    //     } else {
+    //         break;
+    //     }
+    // }
     return moves;
   }
 }

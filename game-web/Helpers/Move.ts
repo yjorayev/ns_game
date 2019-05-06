@@ -1,16 +1,13 @@
-import { BoardState } from './Board';
+import { BoardStateOld } from './Board';
 import { Location } from '../src/app/common/classes/Location';
-import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 
 export abstract class MoveDescriptor {
-    private from: Location;
-    private to: Location;
     // private targetFigure: IFigure;
     private moveAction: (
       from: Location,
       to: Location,
-      boardState: BoardState
-    ) => BoardState;
+      boardState: BoardStateOld
+    ) => BoardStateOld;
 
     constructor(
       _from: Location,
@@ -19,31 +16,16 @@ export abstract class MoveDescriptor {
       _moveAction: (
         from: Location,
         to: Location,
-        boardState: BoardState
-      ) => BoardState
+        boardState: BoardStateOld
+      ) => BoardStateOld
     ) {
-      this.from = _from;
-      this.to = _to;
       // this.targetFigure = _targetFigure;
       this.moveAction = _moveAction;
     }
 
-    move(from: Location, to: Location, boardState: BoardState): BoardState {
-      const figure = boardState.getFigure(from);
+    move(from: Location, to: Location, boardState: BoardStateOld): BoardStateOld {
       boardState = this.moveAction(from, to, boardState);
       return boardState;
-    }
-  }
-
-export class StandardMoveDescriptor extends MoveDescriptor {
-    constructor(from: Location, to: Location, targetFigure: IFigure) {
-      super(from, to, targetFigure.move);
-    }
-  }
-
-export class SwapMoveDescriptor extends MoveDescriptor {
-    constructor(from: Location, to: Location, targetFigure: IFigure) {
-      super(from, to, targetFigure.swap);
     }
   }
 

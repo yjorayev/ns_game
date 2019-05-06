@@ -4,3 +4,11 @@
 4. execute move
 5. execute moveEffects: special figures, regular disappearance
 6. go to 1
+
+
+1. visit cell
+2. update board state on visit
+  a. no changes if not visitable
+  b. stay on cell if cell is empty
+  c. set new location if should jump
+
