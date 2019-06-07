@@ -1,20 +1,6 @@
 import { BoardService } from '../board.service';
-import { Color } from 'src/app/common/enums/color.enum';
-import { FigureType } from 'src/app/common/enums/figureTypes.enum';
-import { Location } from '../../common/classes/Location';
+import { CellLocation } from '../../common/classes/Location';
 import { BoardState } from 'src/app/common/classes/BoardState';
-
-const lvlInfo = [
-  { row: 1, col: 1, type: FigureType.FROG, color: Color.RED },
-  { row: 3, col: 5, type: FigureType.FROG, color: Color.RED },
-  { row: 6, col: 2, type: FigureType.FROG, color: Color.RED },
-  { row: 8, col: 1, type: FigureType.FROG, color: Color.RED },
-  { row: 5, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 6, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 2, col: 7, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 7, col: 0, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 0, col: 4, type: FigureType.OBSTACLE, color: Color.NULL }
-];
 
 describe('Board Service', () => {
   let service: BoardService;
@@ -29,14 +15,14 @@ describe('Board Service', () => {
       board.values[i] = [];
       for (let j = 0; j < board.columns; j++) {
         const figure = service.getFigureFromSettings(i, j);
-        board.setFigure(new Location(i, j), figure);
+        board.setFigure(new CellLocation(i, j), figure);
       }
     }
   });
 
   describe('can get correct path', () => {
     it('can get correct path1', () => {
-      const path = service.getPath(board, new Location(1, 1), new Location(8, 8));
+      const path = service.getPath(board, new CellLocation(1, 1), new CellLocation(8, 8));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(1);
       expect(path.from.column).toEqual(1);
@@ -47,7 +33,7 @@ describe('Board Service', () => {
     });
 
     it('can get correct path2', () => {
-      const path = service.getPath(board, new Location(1, 1), new Location(3, 3));
+      const path = service.getPath(board, new CellLocation(1, 1), new CellLocation(3, 3));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(1);
       expect(path.from.column).toEqual(1);
@@ -58,7 +44,7 @@ describe('Board Service', () => {
     });
 
     it('can get correct path3', () => {
-      const path = service.getPath(board, new Location(3, 5), new Location(5, 2));
+      const path = service.getPath(board, new CellLocation(3, 5), new CellLocation(5, 2));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(3);
       expect(path.from.column).toEqual(5);
@@ -69,7 +55,7 @@ describe('Board Service', () => {
     });
 
     it('can get correct path4', () => {
-      const path = service.getPath(board, new Location(6, 2), new Location(3, 4));
+      const path = service.getPath(board, new CellLocation(6, 2), new CellLocation(3, 4));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(6);
       expect(path.from.column).toEqual(2);
@@ -80,7 +66,7 @@ describe('Board Service', () => {
     });
 
     it('can get correct path5', () => {
-      const path = service.getPath(board, new Location(1, 1), new Location(7, 1));
+      const path = service.getPath(board, new CellLocation(1, 1), new CellLocation(7, 1));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(1);
       expect(path.from.column).toEqual(1);
@@ -90,7 +76,7 @@ describe('Board Service', () => {
     });
 
     it('can get correct path6', () => {
-      const path = service.getPath(board, new Location(8, 1), new Location(2, 1));
+      const path = service.getPath(board, new CellLocation(8, 1), new CellLocation(2, 1));
       expect(path).toBeTruthy();
       expect(path.from.row).toEqual(8);
       expect(path.from.column).toEqual(1);
@@ -98,10 +84,50 @@ describe('Board Service', () => {
       expect(path.to.column).toEqual(1);
       expect(path.midPoint).toBeUndefined();
     });
+
+    it('can get correct path7', () => {
+      const path = service.getPath(board, new CellLocation(6, 2), new CellLocation(5, 5));
+      expect(path).toBeFalsy();
+    });
+
+    it('can get correct path8', () => {
+      const path = service.getPath(board, new CellLocation(6, 2), new CellLocation(6, 5));
+      expect(path).toBeFalsy();
+    });
+
+    it('can get correct path9', () => {
+      const path = service.getPath(board, new CellLocation(3, 5), new CellLocation(3, 6));
+      expect(path).toBeTruthy();
+      expect(path.from.row).toEqual(3);
+      expect(path.from.column).toEqual(5);
+      expect(path.to.row).toEqual(3);
+      expect(path.to.column).toEqual(6);
+      expect(path.midPoint).toBeUndefined();
+    });
+
+    it('can get correct path10', () => {
+      const path = service.getPath(board, new CellLocation(3, 5), new CellLocation(3, 7));
+      expect(path).toBeFalsy();
+    });
+
+    it('can get correct path11', () => {
+      const path = service.getPath(board, new CellLocation(8, 1), new CellLocation(2, 1));
+      expect(path).toBeTruthy();
+      expect(path.from.row).toEqual(8);
+      expect(path.from.column).toEqual(1);
+      expect(path.to.row).toEqual(2);
+      expect(path.to.column).toEqual(1);
+      expect(path.midPoint).toBeUndefined();
+    });
+
+    it('can get correct path12', () => {
+      const path = service.getPath(board, new CellLocation(1, 1), new CellLocation(3, 5));
+      expect(path).toBeFalsy();
+    });
+
+    it('can get correct path12', () => {
+      const path = service.getPath(board, new CellLocation(1, 1), new CellLocation(0, 4));
+      expect(path).toBeFalsy();
+    });
   });
-
-  describe('should update boardState', () => {
-
-  });
-
 });

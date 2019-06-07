@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '../common/classes/Location';
+import { CellLocation } from '../common/classes/Location';
 import { BoardService } from './board.service';
 import { BoardState } from '../common/classes/BoardState';
 import { Path } from '../common/classes/Path';
@@ -9,7 +9,7 @@ import { Path } from '../common/classes/Path';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-  private currentActiveFigureLocation: Location;
+  private currentActiveFigureLocation: CellLocation;
   public boardState: BoardState;
 
   constructor(private boardService: BoardService) {
@@ -19,7 +19,7 @@ export class BoardComponent implements OnInit {
       this.boardState.values[i] = [];
       for (let j = 0; j < this.boardState.columns; j++) {
         const figure = this.boardService.getFigureFromSettings(i, j);
-        this.boardState.setFigure(new Location(i, j), figure);
+        this.boardState.setFigure(new CellLocation(i, j), figure);
       }
     }
   }
@@ -29,7 +29,7 @@ export class BoardComponent implements OnInit {
 
   public activateFigure(row: number, col: number): void {
     if (!this.currentActiveFigureLocation) {
-      this.currentActiveFigureLocation = new Location(row, col);
+      this.currentActiveFigureLocation = new CellLocation(row, col);
     } else {
 
     }
@@ -37,7 +37,7 @@ export class BoardComponent implements OnInit {
 
   public getPathTo(row: number, col: number): void {
     if (this.currentActiveFigureLocation) {
-      const path = this.boardService.getPath(this.boardState, this.currentActiveFigureLocation, new Location(row, col));
+      const path = this.boardService.getPath(this.boardState, this.currentActiveFigureLocation, new CellLocation(row, col));
       console.log(row, col);
       this.drawPath(path);
     }

@@ -1,21 +1,21 @@
 import { BoardStateOld } from './Board';
-import { Location } from '../src/app/common/classes/Location';
+import { CellLocation } from '../src/app/common/classes/Location';
 
 export abstract class MoveDescriptor {
     // private targetFigure: IFigure;
     private moveAction: (
-      from: Location,
-      to: Location,
+      from: CellLocation,
+      to: CellLocation,
       boardState: BoardStateOld
     ) => BoardStateOld;
 
     constructor(
-      _from: Location,
-      _to: Location,
+      _from: CellLocation,
+      _to: CellLocation,
       // _targetFigure: IFigure,
       _moveAction: (
-        from: Location,
-        to: Location,
+        from: CellLocation,
+        to: CellLocation,
         boardState: BoardStateOld
       ) => BoardStateOld
     ) {
@@ -23,7 +23,7 @@ export abstract class MoveDescriptor {
       this.moveAction = _moveAction;
     }
 
-    move(from: Location, to: Location, boardState: BoardStateOld): BoardStateOld {
+    move(from: CellLocation, to: CellLocation, boardState: BoardStateOld): BoardStateOld {
       boardState = this.moveAction(from, to, boardState);
       return boardState;
     }

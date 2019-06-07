@@ -1,10 +1,9 @@
-import { Location } from '../classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { BoardState } from '../classes/BoardState';
-import { StepDescriptor } from '../classes/StepDescriptor';
-import { ActiveFrog } from './ActiveFrogFigure';
+import { DirectionDescriptor } from '../classes/DirectionDescriptor';
+import { CellLocation } from '../classes/Location';
+import { LandResult } from '../classes/LanDresult';
 
 export class NullFigure implements IFigure {
   type: FigureType;
@@ -15,15 +14,7 @@ export class NullFigure implements IFigure {
     this.color = Color.NULL;
   }
 
-  land(step: StepDescriptor, boardState: BoardState): StepDescriptor {
-    const figure = boardState.getFigure(step.from);
-    if (!(figure instanceof ActiveFrog)) {
-      throw new Error('Moving a non-frog figure is not allowed!');
-    }
-
-    boardState.setFigure(step.from, new NullFigure());
-    boardState.setFigure(step.to, figure);
-
-    return step;
+  land(pathDistance: DirectionDescriptor, targetLocation: CellLocation): LandResult {
+    return new LandResult(targetLocation, true);
   }
 }

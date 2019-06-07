@@ -1,25 +1,25 @@
-import { Frog } from './FrogFigure';
-import { StepDescriptor } from '../classes/StepDescriptor';
-import { BoardState } from '../classes/BoardState';
-import { InactiveFrog } from './InactiveFrogFigure';
+import { IFigure } from '../interfaces/IFigure.interface';
+import { Color } from '../enums/color.enum';
+import { FigureType } from '../enums/figureTypes.enum';
+import { LandResult } from '../classes/LanDresult';
+import { DirectionDescriptor } from '../classes/DirectionDescriptor';
+import { CellLocation } from '../classes/Location';
 
-export class ActiveFrog extends Frog {
+export class ActiveFrog implements IFigure {
+  type: FigureType;
+  color: Color;
 
-  land(step: StepDescriptor, boardState: BoardState): StepDescriptor {
-    const direction = step.from.distanceTo(step.to);
-    return direction.isValid() ? this.swap(step, boardState) : null;
+
+  constructor(color: Color){
+    this.type = FigureType.ACTIVEFROG;
+    this.color = color;
   }
 
-  private swap(step: StepDescriptor, boardState: BoardState): StepDescriptor {
-    const fromFigure = boardState.getFigure(step.from);
-    if (!(fromFigure instanceof ActiveFrog)) {
-      throw new Error('Moving a non-frog figure is not allowed!');
-    }
+  land(distance: DirectionDescriptor, location: CellLocation): LandResult {
+    return this.canLand(distance) ? new LandResult(location, false) : null;
+  }
 
-    const fromColor = fromFigure.color;
-    boardState.setFigure(step.from, new InactiveFrog(this.color));
-    boardState.setFigure(step.to, new ActiveFrog(fromColor));
-
-    return step;
+  private canLand(distance: DirectionDescriptor): boolean {
+    return distance.isValid();
   }
 }

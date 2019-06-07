@@ -1,5 +1,6 @@
 export enum FigureType {
-  FROG,
+  ACTIVEFROG,
+  INACTIVEFROG,
   OBSTACLE,
   NULL
 }

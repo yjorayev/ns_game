@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Path } from '../common/classes/Path';
-import { Location } from '../common/classes/Location';
+import { CellLocation } from '../common/classes/Location';
 import { DirectionDescriptor } from '../common/classes/DirectionDescriptor';
 import { StepDescriptor } from '../common/classes/StepDescriptor';
 import { BoardState } from '../common/classes/BoardState';
@@ -10,15 +10,32 @@ import { FigureType } from '../common/enums/figureTypes.enum';
 import { Color } from '../common/enums/color.enum';
 import { Obstacle } from '../common/Figures/ObstacleFigure';
 import { ActiveFrog } from '../common/Figures/ActiveFrogFigure';
+import { QueueItem, PossibleStepsQueue } from '../common/classes/PossibleStepsQueue';
+
+const lvlInfo = [
+  { row: 1, col: 1, type: FigureType.ACTIVEFROG, color: Color.RED },
+  { row: 3, col: 5, type: FigureType.ACTIVEFROG, color: Color.RED },
+  { row: 3, col: 6, type: FigureType.ACTIVEFROG, color: Color.RED },
+  { row: 6, col: 2, type: FigureType.ACTIVEFROG, color: Color.RED },
+  { row: 8, col: 1, type: FigureType.ACTIVEFROG, color: Color.RED },
+  { row: 5, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
+  { row: 6, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
+  { row: 2, col: 7, type: FigureType.OBSTACLE, color: Color.NULL },
+  { row: 7, col: 0, type: FigureType.OBSTACLE, color: Color.NULL },
+  { row: 0, col: 4, type: FigureType.OBSTACLE, color: Color.NULL }
+];
 
 @Injectable()
 export class BoardService {
-  private _directions: DirectionDescriptor[] = [
+  private directions: DirectionDescriptor[] = [
     new DirectionDescriptor(-1, 0), // UP
     new DirectionDescriptor(0, 1), // RIGHT
     new DirectionDescriptor(1, 0), // DOWN
     new DirectionDescriptor(0, -1) // LEFT
   ];
+
+  private boardState: BoardState;
+  private takenSteps: StepDescriptor[];
 
   public getFigureFromSettings(row: number, column: number): IFigure {
     const figure = lvlInfo.find(
@@ -30,105 +47,94 @@ export class BoardService {
     return new NullFigure();
   }
 
-  public getPath(boardState: BoardState, from: Location, to: Location): Path {
-    const visited: StepDescriptor[] = [];
-    let queue = [
-      {
-        step: { from, to: from, canChangeDirection: true },
-        path: new Path(from, from)
-      } as QueueItem
-    ];
+  public getPath(boardState: BoardState, from: CellLocation, to: CellLocation): Path {
+    this.boardState = boardState;
+    this.takenSteps = [];
 
-    visited.push(new StepDescriptor(from, to, true, null));
+    let stepsToTake: PossibleStepsQueue = [{
+      step: new StepDescriptor(from, true, null),
+      path: new Path(from, from),
+      canExpand: true
+    }];
 
-    while (queue.length > 0) {
-      const lastItem = queue[queue.length - 1];
 
-      if (lastItem.step.to.equals(to)) {
+    while (stepsToTake.length > 0) {
+      const lastItem = stepsToTake.pop();
+
+      if (lastItem.path.to.equals(to)) {
         return lastItem.path;
       }
 
-      queue.pop();
-      const nextItems = this.AddNextLocationsToQueue(lastItem, boardState, visited);
-      queue = queue.concat(nextItems);
+      if (lastItem.canExpand) {
+        const nextLocations = this.GetNextLocationsToVisit(lastItem);
+        stepsToTake = stepsToTake.concat(nextLocations);
+      }
     }
 
     return null;
   }
 
-  private AddNextLocationsToQueue(item: QueueItem, boardState: BoardState, visited: StepDescriptor[]): QueueItem[] {
+  private GetNextLocationsToVisit(item: QueueItem): QueueItem[] {
     let queue: QueueItem[] = [];
     if (item.step.canChangeDirection) {
-      queue = this.GetNextLocationWhenCanChangeDirection(item, boardState, visited);
+      queue = this.GetNextLocationWhenCanChangeDirection(item);
     } else {
-      queue = this.GetNextLocationWhenCannotChangeDirection(item, boardState, visited);
+      queue = this.GetNextLocationWhenCannotChangeDirection(item);
     }
 
     return queue;
   }
 
-  private GetNextLocationWhenCanChangeDirection(item: QueueItem, boardState: BoardState, visited: StepDescriptor[]): QueueItem[] {
+  private GetNextLocationWhenCanChangeDirection(item: QueueItem): QueueItem[] {
     let queue: QueueItem[] = [];
     let isDirectionSet = false;
     if (item.step.currentDirection) {
       isDirectionSet = true;
     }
 
-    for (const dir of this._directions) {
+    for (const dir of this.directions) {
       if (!isDirectionSet) {
         item.step.currentDirection = dir;
-        visited[0].currentDirection = dir;
+        // takenSteps[0].currentDirection = dir;
       }
 
-      queue = queue.concat(this.GetNextLocationByDirection(item, boardState, dir, visited));
+      queue = queue.concat(this.GetNextLocationByDirection(item, dir));
     }
     return queue;
   }
 
-  private GetNextLocationWhenCannotChangeDirection(item: QueueItem, boardState: BoardState, visited: StepDescriptor[]): QueueItem[] {
-    return this.GetNextLocationByDirection(item, boardState, item.step.currentDirection, visited);
+  private GetNextLocationWhenCannotChangeDirection(item: QueueItem): QueueItem[] {
+    return this.GetNextLocationByDirection(item, item.step.currentDirection);
   }
 
-// tslint:disable-next-line: max-line-length
-  private GetNextLocationByDirection(item: QueueItem, boardState: BoardState, dir: DirectionDescriptor, visited: StepDescriptor[]): QueueItem[] {
+  private GetNextLocationByDirection(item: QueueItem, dir: DirectionDescriptor): QueueItem[] {
     const queue: QueueItem[] = [];
-    const nextLocation = item.step.to.shift(dir);
     const directionChanged = !item.step.currentDirection.equals(dir);
-    let step = new StepDescriptor(item.step.to, nextLocation, item.step.canChangeDirection && !directionChanged, dir);
+    const step = new StepDescriptor(item.step.from, item.step.canChangeDirection && !directionChanged, dir);
 
-    if (!this.isInList(visited, step) && boardState.isLocationValid(nextLocation)) {
-      const nextFigure = boardState.getFigure(nextLocation);
-      const path = this.BuildPathByStep(directionChanged, item, step);
+    if (!this.isInList(this.takenSteps, step)) {
+      const nextCell = item.step.from.shift(dir);
+      const landResult = this.boardState.land(nextCell, item.path.from);
 
-      step = nextFigure.land(step, boardState);
-      this.addToQueue(step, path, queue, visited);
+      if (landResult) {
+        const path = this.BuildPathByStep(directionChanged, item, landResult.exitLocation);
+        const nextStep = new StepDescriptor(landResult.exitLocation, step.canChangeDirection, step.currentDirection);
+        queue.push(new QueueItem(nextStep, path, landResult.canExpand));
+      }
 
-      // if (nextFigure.isLandable) {
-      //   this.addToQueue(step, path, queue, visited);
-      // }
-      // if (nextFigure.isJumpable) {
-      //   step = nextFigure.jump(step, boardState);
-      //   this.addToQueue(step, path, queue, visited);
-      // }
+      this.takenSteps.push(step);
     }
     return queue;
   }
 
-  private BuildPathByStep(directionChanged: boolean, item: QueueItem, step: StepDescriptor): Path {
+  private BuildPathByStep(directionChanged: boolean, item: QueueItem, endLocation: CellLocation): Path {
     let path: Path;
     if (directionChanged) {
-      path = new Path(item.path.from, step.to, item.path.to);
+      path = new Path(item.path.from, endLocation, item.path.to);
     } else {
-      path = new Path(item.path.from, step.to, item.path.midPoint);
+      path = new Path(item.path.from, endLocation, item.path.midPoint);
     }
     return path;
-  }
-
-  private addToQueue(step: StepDescriptor, path: Path, queue: QueueItem[], visited: StepDescriptor[]): void {
-    if (step) {
-      queue.push({ step, path });
-      visited.push(step);
-    }
   }
 
   private isInList(list: StepDescriptor[], item: StepDescriptor): boolean {
@@ -137,7 +143,7 @@ export class BoardService {
 
   public createFigure(type: FigureType, color: Color): IFigure {
     switch (type) {
-      case FigureType.FROG:
+      case FigureType.ACTIVEFROG:
         return new ActiveFrog(color);
       case FigureType.OBSTACLE:
         return new Obstacle(color);
@@ -146,20 +152,3 @@ export class BoardService {
     }
   }
 }
-
-class QueueItem {
-  step: StepDescriptor;
-  path: Path;
-}
-
-const lvlInfo = [
-  { row: 1, col: 1, type: FigureType.FROG, color: Color.RED },
-  { row: 3, col: 5, type: FigureType.FROG, color: Color.RED },
-  { row: 6, col: 2, type: FigureType.FROG, color: Color.RED },
-  { row: 8, col: 1, type: FigureType.FROG, color: Color.RED },
-  { row: 5, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 6, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 2, col: 7, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 7, col: 0, type: FigureType.OBSTACLE, color: Color.NULL },
-  { row: 0, col: 4, type: FigureType.OBSTACLE, color: Color.NULL }
-];

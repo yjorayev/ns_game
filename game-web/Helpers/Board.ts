@@ -1,4 +1,4 @@
-import { Location } from '../src/app/common/classes/Location';
+import { CellLocation } from '../src/app/common/classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 
 
@@ -9,15 +9,15 @@ export class BoardStateOld {
   private values: IFigure[][];
   public isComplete: boolean;
 
-  public getFigure(location: Location): IFigure {
+  public getFigure(location: CellLocation): IFigure {
     return this.values[location.row][location.column];
   }
 
-  public setFigure(location: Location, figure: IFigure): void {
+  public setFigure(location: CellLocation, figure: IFigure): void {
     this.values[location.row][location.column] = figure;
   }
 
-  public isLocationOnBoard(location: Location): boolean {
+  public isLocationOnBoard(location: CellLocation): boolean {
     throw new Error('Method not implemented.');
   }
 }

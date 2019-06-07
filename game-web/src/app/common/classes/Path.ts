@@ -1,10 +1,10 @@
-import { Location } from './Location';
+import { CellLocation } from './Location';
 
 export class Path {
-    from: Location;
-    to: Location;
-    midPoint?: Location;
-    constructor(from: Location, to: Location, midPoint?: Location) {
+    from: CellLocation;
+    to: CellLocation;
+    midPoint?: CellLocation;
+    constructor(from: CellLocation, to: CellLocation, midPoint?: CellLocation) {
         this.from = from;
         this.to = to;
         this.midPoint = midPoint;

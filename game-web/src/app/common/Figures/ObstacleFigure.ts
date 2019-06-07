@@ -1,9 +1,9 @@
-import { Location } from '../classes/Location';
 import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { BoardState } from '../classes/BoardState';
-import { StepDescriptor } from '../classes/StepDescriptor';
+import { LandResult } from '../classes/LanDresult';
+import { DirectionDescriptor } from '../classes/DirectionDescriptor';
+import { CellLocation } from '../classes/Location';
 
 export class Obstacle implements IFigure {
   type: FigureType;
@@ -14,7 +14,7 @@ export class Obstacle implements IFigure {
     this.color = color;
   }
 
-  land(step: StepDescriptor, boardState: BoardState): StepDescriptor {
+  land(pathDistance: DirectionDescriptor, targetLocation: CellLocation): LandResult {
     return null;
   }
 }

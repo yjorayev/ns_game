@@ -1,15 +1,12 @@
 import { FigureType as FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { BoardState } from '../classes/BoardState';
-import { Location } from '../classes/Location';
-import { StepDescriptor } from '../classes/StepDescriptor';
+import { LandResult } from '../classes/LandResult';
+import { DirectionDescriptor } from '../classes/DirectionDescriptor';
+import { CellLocation } from '../classes/Location';
 
 export interface IFigure {
   type: FigureType;
   color: Color;
-  // isLandable: boolean;
-  // isSwappable: boolean;
-  // isJumpable: boolean;
 
-  land(step: StepDescriptor, boardState: BoardState): StepDescriptor;
+  land(pathDistance: DirectionDescriptor, targetLocation: CellLocation): LandResult;
 }
