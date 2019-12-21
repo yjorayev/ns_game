@@ -11,7 +11,7 @@ export class DirectionDescriptor {
     return this.rowPush === item.rowPush && this.columnPush === item.columnPush;
   }
 
-  isValid(): boolean {
+  isOneStepAway(): boolean {
     return (this.rowPush === 0 && Math.abs(this.columnPush) === 1)
       || (this.rowPush === 1 && Math.abs(this.columnPush) === 0);
   }

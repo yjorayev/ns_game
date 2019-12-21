@@ -20,6 +20,6 @@ export class ActiveFrog implements IFigure {
   }
 
   private canLand(distance: DirectionDescriptor): boolean {
-    return distance.isValid();
+    return distance.isOneStepAway();
   }
 }

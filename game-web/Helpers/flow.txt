@@ -23,11 +23,11 @@
 
 
 Explanation of getPath(from, to) algorithm:
-  1. Start exploring the closest possible destinations(to). From current location move one cell in each direction and the locations to the queue of possible destinations.
+  1. Start exploring the closest possible destinations(to). From current location move one cell in each direction and add the locations to the queue of possible destinations.
   2. Do not update the board state until the specific step is taken. This is because we don't change board state as we are walking the path.
      We only update the board state after we complete the path.
   3. Keep list of taken steps to prevent analyzing the same path.
-     From location, currentDirection and casnChangeDirection are enough because boardState should stay the same as we look for possible paths.
+     From location, currentDirection and canChangeDirection are enough because boardState should stay the same as we look for possible paths.
   4. Pop an item from the queue and go to step 1 using that location as from.
           (This will still be the possible move because if we can move from A to B and from B to C(considering canChangeDirection flag) then we can move from A to C).
   5.

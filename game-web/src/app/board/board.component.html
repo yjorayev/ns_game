@@ -1,10 +1,10 @@
 <div *ngFor='let row of boardState.values; let x = index'>
     <div *ngFor='let column of boardState.values[x]; let y = index' [ngClass]="{'cell': true, 'active': currentActiveFigureLocation && currentActiveFigureLocation.column === y && currentActiveFigureLocation.row === x}" (click)='activateFigure(x, y)' (mouseover)='getPathTo(x, y)'>
-        <div [ngSwitch]='boardState.values[x][y].type'>
-            <div *ngSwitchCase='0' class="{{boardState.values[x][y].color}}">AF</div>
-            <div *ngSwitchCase='1' class="{{boardState.values[x][y].color}}">IF</div>
-            <div *ngSwitchCase='2' class="{{boardState.values[x][y].color}}">X</div>
-            <div *ngSwitchCase='3' class="{{boardState.values[x][y].color}}"></div>
-        </div>
+        <ng-container [ngSwitch]='boardState.values[x][y].type'>
+            <div *ngSwitchCase='0' [ngClass]="getClass(x, y)">AF</div>
+            <div *ngSwitchCase='1' [ngClass]="getClass(x, y)">IF</div>
+            <div *ngSwitchCase='2' [ngClass]="getClass(x, y)">X</div>
+            <div *ngSwitchCase='3' [ngClass]="getClass(x, y)"></div>
+        </ng-container>
     </div>
 </div>
