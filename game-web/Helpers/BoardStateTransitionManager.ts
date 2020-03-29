@@ -1,8 +1,8 @@
-import { CellLocation } from '../src/app/common/classes/Location';
 import { MoveDescriptor } from './Move';
-import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
-import { DirectionDescriptor } from 'src/app/common/classes/DirectionDescriptor';
+import { IFigure } from 'src/app/common/figure/IFigure.interface';
+import { DirectionDescriptor } from 'src/app/common/directionDescriptor/directionDescriptor';
 import { BoardState } from 'src/app/common/classes/BoardState';
+import { ICellLocation } from 'src/app/common/location/ICellLocation.interface';
 
 export class BoardStateTransitionManager {
   private directions: DirectionDescriptor[] = [
@@ -13,7 +13,7 @@ export class BoardStateTransitionManager {
   ];
 
   public getMovesFor(
-    location: CellLocation,
+    location: ICellLocation,
     figure: IFigure,
     boardState: BoardState
   ): MoveDescriptor[] {
@@ -25,7 +25,7 @@ export class BoardStateTransitionManager {
   }
 
   private getMovesByDirection(
-    location: CellLocation,
+    location: ICellLocation,
     direction: DirectionDescriptor,
     figure: IFigure,
     boardState: BoardState

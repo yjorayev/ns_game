@@ -1,9 +1,9 @@
-import { IFigure } from 'src/app/common/interfaces/IFigure.interface';
+import { IFigure } from 'src/app/common/figure/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
-import { DirectionDescriptor } from '../classes/DirectionDescriptor';
-import { CellLocation } from '../classes/Location';
 import { LandResult } from '../classes/LanDresult';
+import { ICellLocation } from '../location/ICellLocation.interface';
+import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 
 export class NullFigure implements IFigure {
   type: FigureType;
@@ -14,7 +14,7 @@ export class NullFigure implements IFigure {
     this.color = Color.NULL;
   }
 
-  land(pathDistance: DirectionDescriptor, targetLocation: CellLocation): LandResult {
+  getLandResult(pathDistance: IDirectionDescriptor, targetLocation: ICellLocation): LandResult {
     return new LandResult(targetLocation, true);
   }
 }

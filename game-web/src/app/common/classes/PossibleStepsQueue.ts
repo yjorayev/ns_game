@@ -1,5 +1,5 @@
 import { StepDescriptor } from './StepDescriptor';
-import { Path } from './Path';
+import { Path } from '../path/path';
 
 export class QueueItem {
   step: StepDescriptor;

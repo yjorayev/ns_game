@@ -1,15 +1,15 @@
-import { DirectionDescriptor } from './DirectionDescriptor';
-import { CellLocation } from './Location';
+import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
+import { ICellLocation } from '../location/ICellLocation.interface';
 
 export class StepDescriptor {
-  from: CellLocation;
+  from: ICellLocation;
   canChangeDirection: boolean;
-  currentDirection: DirectionDescriptor;
+  currentDirection: IDirectionDescriptor;
 
   constructor(
-    from: CellLocation,
+    from: ICellLocation,
     canChangeDirection: boolean,
-    currentDirection: DirectionDescriptor
+    currentDirection: IDirectionDescriptor
   ) {
     this.from = from;
     this.canChangeDirection = canChangeDirection;
@@ -22,7 +22,7 @@ export class StepDescriptor {
       && this.canChangeDirection === step.canChangeDirection;
   }
 
-  public takeAStep(): CellLocation {
+  public takeAStep(): ICellLocation {
     throw new Error('Method not implemented');
   }
 }

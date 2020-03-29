@@ -1,9 +1,9 @@
-import { IFigure } from '../interfaces/IFigure.interface';
+import { IFigure } from './IFigure.interface';
 import { Color } from '../enums/color.enum';
 import { FigureType } from '../enums/figureTypes.enum';
 import { LandResult } from '../classes/LanDresult';
-import { DirectionDescriptor } from '../classes/DirectionDescriptor';
-import { CellLocation } from '../classes/Location';
+import { ICellLocation } from '../location/ICellLocation.interface';
+import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 
 export class ActiveFrog implements IFigure {
   type: FigureType;
@@ -15,11 +15,11 @@ export class ActiveFrog implements IFigure {
     this.color = color;
   }
 
-  land(distance: DirectionDescriptor, location: CellLocation): LandResult {
+  getLandResult(distance: IDirectionDescriptor, location: ICellLocation): LandResult {
     return this.canLand(distance) ? new LandResult(location, false) : null;
   }
 
-  private canLand(distance: DirectionDescriptor): boolean {
+  private canLand(distance: IDirectionDescriptor): boolean {
     return distance.isOneStepAway();
   }
 }

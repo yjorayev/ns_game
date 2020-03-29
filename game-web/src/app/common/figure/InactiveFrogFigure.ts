@@ -1,9 +1,9 @@
-import { IFigure } from '../interfaces/IFigure.interface';
+import { IFigure } from './IFigure.interface';
 import { Color } from '../enums/color.enum';
 import { FigureType } from '../enums/figureTypes.enum';
-import { CellLocation } from '../classes/Location';
 import { LandResult } from '../classes/LanDresult';
-import { DirectionDescriptor } from '../classes/DirectionDescriptor';
+import { ICellLocation } from '../location/ICellLocation.interface';
+import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 
 export class InactiveFrog implements IFigure {
   type: FigureType;
@@ -14,7 +14,7 @@ export class InactiveFrog implements IFigure {
     this.color = color;
   }
 
-  land(pathDistance: DirectionDescriptor, targetLocation: CellLocation): LandResult {
+  getLandResult(pathDistance: IDirectionDescriptor, targetLocation: ICellLocation): LandResult {
     return null;
   }
 }

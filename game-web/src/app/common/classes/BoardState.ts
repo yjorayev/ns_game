@@ -1,7 +1,6 @@
-import { IFigure } from '../interfaces/IFigure.interface';
-import { CellLocation } from './Location';
-import { StepDescriptor } from './StepDescriptor';
+import { IFigure } from '../figure/IFigure.interface';
 import { LandResult } from './LandResult';
+import { ICellLocation } from '../location/ICellLocation.interface';
 
 export class BoardState {
   public rows: number;
@@ -13,32 +12,32 @@ export class BoardState {
     this.columns = columns;
   }
 
-  getFigure(location: CellLocation): IFigure {
-    return this.values[location.row][location.column];
-  }
-
-  setFigure(location: CellLocation, figure: IFigure): void {
+  setFigure(location: ICellLocation, figure: IFigure): void {
     this.values[location.row][location.column] = figure;
   }
 
-  isLocationValid(location: CellLocation): boolean {
-    return location && location.row >= 0 && location.row < this.rows &&
-      location.column >= 0 && location.column < this.columns;
-  }
-
-  land(toLocation: CellLocation, fromLocation: CellLocation): LandResult {
+  getLandResult(toLocation: ICellLocation, fromLocation: ICellLocation): LandResult {
     let landResult: LandResult;
 
     if (this.isLocationValid(toLocation)) {
       const figure = this.getFigure(toLocation);
       const pathDistance = fromLocation.distanceTo(toLocation);
 
-      landResult = figure.land(pathDistance, toLocation);
+      landResult = figure.getLandResult(pathDistance, toLocation);
       if (landResult && !landResult.exitLocation.equals(toLocation)) {
-        landResult = this.land(landResult.exitLocation, fromLocation);
+        landResult = this.getLandResult(landResult.exitLocation, fromLocation);
       }
     }
 
     return landResult;
+  }
+
+  private getFigure(location: ICellLocation): IFigure {
+    return this.values[location.row][location.column];
+  }
+
+  private isLocationValid(location: ICellLocation): boolean {
+    return location && location.row >= 0 && location.row < this.rows &&
+      location.column >= 0 && location.column < this.columns;
   }
 }

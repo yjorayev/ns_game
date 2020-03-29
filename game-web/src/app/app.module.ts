@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
+import { PathService } from './common/path/path.service';
 import { BoardService } from './board/board.service';
 
 @NgModule({
@@ -15,7 +16,7 @@ import { BoardService } from './board/board.service';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [BoardService],
+  providers: [PathService, BoardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

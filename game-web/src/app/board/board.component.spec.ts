@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BoardComponent } from './board.component';
+import { PathService } from '../common/path/path.service';
+import { BoardService } from './board.service';
 
-import { BoardComponent } from '../board.component';
-import { BoardService } from '../board.service';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -10,7 +11,7 @@ describe('BoardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [BoardComponent],
-      providers: [BoardService]
+      providers: [PathService, BoardService]
     })
       .compileComponents();
   }));
