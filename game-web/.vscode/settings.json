@@ -10,7 +10,8 @@
         "dist": true
     },
     "[typescript]": {
-      "editor.defaultFormatter": "vscode.typescript-language-features"
+      "editor.defaultFormatter": "vscode.typescript-language-features",
+      "editor.formatOnSave": true
     },
     "[html]": {
       "editor.defaultFormatter": "teeLang.vsprettier"

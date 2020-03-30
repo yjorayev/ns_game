@@ -1,4 +1,4 @@
-import { DirectionDescriptor } from '../directionDescriptor/directionDescriptor';
+import { DirectionDescriptor } from '../directionDescriptor/DirectionDescriptor';
 import { ICellLocation } from './ICellLocation.interface';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 

@@ -1,5 +1,5 @@
 import { ICellLocation } from './ICellLocation.interface';
-import { DirectionDescriptor } from '../directionDescriptor/directionDescriptor';
+import { DirectionDescriptor } from '../directionDescriptor/DirectionDescriptor';
 
 export class NullLocation implements ICellLocation {
     private static _instance: NullLocation;

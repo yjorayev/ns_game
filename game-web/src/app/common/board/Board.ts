@@ -15,6 +15,10 @@ export class Board {
   private _columnLength: number;
   public values: IFigure[][];
 
+  get currentState(){
+    return this._state;
+  }
+
   setDimensions(rows: number, columns: number) {
     this._rowLength = rows;
     this._columnLength = columns;

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Path } from './path';
-import { DirectionDescriptor } from '../directionDescriptor/directionDescriptor';
+import { DirectionDescriptor } from '../directionDescriptor/DirectionDescriptor';
 import { StepDescriptor } from '../classes/StepDescriptor';
 import { QueueItem, PossibleStepsQueue } from '../classes/PossibleStepsQueue';
-import { NullDirectionDescriptor } from '../directionDescriptor/nullDirectionDescriptor';
+import { NullDirectionDescriptor } from '../directionDescriptor/NullDirectionDescriptor';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 import { ICellLocation } from '../location/ICellLocation.interface';
 import { Board } from '../board/Board';

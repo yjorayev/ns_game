@@ -2,7 +2,7 @@ import { IFigure } from 'src/app/common/figure/IFigure.interface';
 import { FigureType } from '../enums/figureTypes.enum';
 import { Color } from '../enums/color.enum';
 import { LandResult } from '../classes/LanDresult';
-import { DirectionDescriptor } from '../directionDescriptor/directionDescriptor';
+import { DirectionDescriptor } from '../directionDescriptor/DirectionDescriptor';
 import { ICellLocation } from '../location/ICellLocation.interface';
 import { NullLocation } from '../location/nullLocation';
 
