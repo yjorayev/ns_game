@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Path } from './path';
 import { DirectionDescriptor } from '../directionDescriptor/directionDescriptor';
 import { StepDescriptor } from '../classes/StepDescriptor';
-import { BoardState } from '../classes/BoardState';
 import { QueueItem, PossibleStepsQueue } from '../classes/PossibleStepsQueue';
 import { NullDirectionDescriptor } from '../directionDescriptor/nullDirectionDescriptor';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 import { ICellLocation } from '../location/ICellLocation.interface';
+import { Board } from '../board/Board';
 
 @Injectable()
 export class PathService {
@@ -17,10 +17,10 @@ export class PathService {
     new DirectionDescriptor(0, -1) // LEFT
   ];
 
-  private boardState: BoardState;
+  private boardState: Board;
   private takenSteps: StepDescriptor[];
 
-  public getPath(boardState: BoardState, from: ICellLocation, to: ICellLocation): Path {
+  public getPath(boardState: Board, from: ICellLocation, to: ICellLocation): Path {
     this.boardState = boardState;
     this.takenSteps = [];
 

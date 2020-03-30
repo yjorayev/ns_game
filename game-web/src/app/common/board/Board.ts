@@ -1,15 +1,23 @@
 import { IFigure } from '../figure/IFigure.interface';
-import { LandResult } from './LandResult';
 import { ICellLocation } from '../location/ICellLocation.interface';
+import { LandResult } from '../classes/LandResult';
+import { IBoardState } from './IBoardState.interface';
+import { IdleState } from './BoardStates';
+import { Injectable } from '@angular/core';
+import { Path } from '../path/path';
 
-export class BoardState {
-  public rows: number;
-  public columns: number;
+@Injectable({
+  providedIn: 'root'
+})
+export class Board {
+  private _state: IBoardState = new IdleState();
+  private _rowLength: number;
+  private _columnLength: number;
   public values: IFigure[][];
 
-  constructor(rows: number, columns: number, values?: IFigure[][]) {
-    this.rows = rows;
-    this.columns = columns;
+  setDimensions(rows: number, columns: number) {
+    this._rowLength = rows;
+    this._columnLength = columns;
   }
 
   setFigure(location: ICellLocation, figure: IFigure): void {
@@ -32,12 +40,20 @@ export class BoardState {
     return landResult;
   }
 
+  click(location: ICellLocation){
+    this._state = this._state.updateState(location);
+  }
+
+  getPath(toLocation: ICellLocation): Path{
+    return this._state.getPath(toLocation, this);
+  }
+
   private getFigure(location: ICellLocation): IFigure {
     return this.values[location.row][location.column];
   }
 
   private isLocationValid(location: ICellLocation): boolean {
-    return location && location.row >= 0 && location.row < this.rows &&
-      location.column >= 0 && location.column < this.columns;
+    return location.row >= 0 && location.row < this._rowLength &&
+      location.column >= 0 && location.column < this._columnLength;
   }
 }

@@ -4,22 +4,27 @@ import { FigureType } from '../enums/figureTypes.enum';
 import { LandResult } from '../classes/LanDresult';
 import { ICellLocation } from '../location/ICellLocation.interface';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
+import { IMovable } from './IMovableFigure';
+import { MovableFigure } from './MovableFigure';
 
-export class ActiveFrog implements IFigure {
+export class Frog implements IFigure {
+  private _movable: IMovable;
   type: FigureType;
   color: Color;
+  currentLocation: ICellLocation;
 
-
-  constructor(color: Color){
-    this.type = FigureType.ACTIVEFROG;
+  constructor(color: Color, loc: ICellLocation) {
+    this.type = FigureType.FROG;
     this.color = color;
+    this.currentLocation = loc;
+    this._movable = MovableFigure.Instance;
   }
 
   getLandResult(distance: IDirectionDescriptor, location: ICellLocation): LandResult {
-    return this.canLand(distance) ? new LandResult(location, false) : null;
+    return this._movable.land(distance, location);
   }
 
-  private canLand(distance: IDirectionDescriptor): boolean {
-    return distance.isOneStepAway();
+  activate(): ICellLocation {
+    return this.currentLocation;
   }
 }

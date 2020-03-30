@@ -1,27 +1,18 @@
 import { PathService } from './path.service';
 import { CellLocation } from '../location/Location';
-import { BoardState } from 'src/app/common/classes/BoardState';
 import { BoardService } from '../../board/board.service';
 import { NullLocation } from '../location/nullLocation';
+import { Board } from '../board/Board';
 
 describe('Path Service', () => {
   let pathService: PathService;
   let boardService: BoardService;
-  let board: BoardState;
+  let board: Board;
 
   beforeEach(() => {
     pathService = new PathService();
-    boardService = new BoardService();
-    board = new BoardState(9, 9);
-    board.values = [];
-
-    for (let i = 0; i < board.rows; i++) {
-      board.values[i] = [];
-      for (let j = 0; j < board.columns; j++) {
-        const figure = boardService.getFigureFromSettings(i, j);
-        board.setFigure(new CellLocation(i, j), figure);
-      }
-    }
+    boardService = new BoardService(new Board());
+    board = boardService.createBoard();
   });
 
   describe('can get correct path', () => {

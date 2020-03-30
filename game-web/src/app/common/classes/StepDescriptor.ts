@@ -21,8 +21,4 @@ export class StepDescriptor {
       && this.currentDirection.equals(step.currentDirection)
       && this.canChangeDirection === step.canChangeDirection;
   }
-
-  public takeAStep(): ICellLocation {
-    throw new Error('Method not implemented');
-  }
 }
