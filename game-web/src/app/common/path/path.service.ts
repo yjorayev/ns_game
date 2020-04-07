@@ -8,7 +8,9 @@ import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescripto
 import { ICellLocation } from '../location/ICellLocation.interface';
 import { Board } from '../board/Board';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PathService {
   private directions: DirectionDescriptor[] = [
     new DirectionDescriptor(-1, 0), // UP

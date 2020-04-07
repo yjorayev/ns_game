@@ -6,6 +6,8 @@ import { ICellLocation } from '../location/ICellLocation.interface';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 import { IMovable } from './IMovableFigure';
 import { MovableFigure } from './MovableFigure';
+import { MessengerService } from '../messenger.service';
+import { NotMovableFigure } from './NotMovableFigure';
 
 export class Frog implements IFigure {
   private _movable: IMovable;
@@ -20,11 +22,36 @@ export class Frog implements IFigure {
     this._movable = MovableFigure.Instance;
   }
 
+  get text() {
+    return this._movable.text;
+  }
+
   getLandResult(distance: IDirectionDescriptor, location: ICellLocation): LandResult {
     return this._movable.land(distance, location);
   }
 
-  activate(): ICellLocation {
-    return this.currentLocation;
+  activate(messenger: MessengerService) {
+    this._movable.activate(messenger, this);
   }
+
+  moveOn(messenger: MessengerService, targetFigure: IFigure) {
+    this.validateMovable();
+
+    this._movable = NotMovableFigure.Instance;
+    this.swapPositionWith(messenger, targetFigure);
+  }
+
+  private swapPositionWith(messenger: MessengerService, figure: IFigure): void {
+    const currentLocation = this.currentLocation;
+    this.currentLocation = figure.currentLocation;
+    figure.currentLocation = currentLocation;
+    messenger.figuresSwapped(this, figure);
+  }
+
+  private validateMovable() {
+    if (this._movable === NotMovableFigure.Instance) {
+      throw Error('cannot call this method on non-movable state');
+    }
+  }
+
 }

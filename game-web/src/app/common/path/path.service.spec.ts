@@ -3,15 +3,18 @@ import { CellLocation } from '../location/Location';
 import { BoardService } from '../../board/board.service';
 import { NullLocation } from '../location/nullLocation';
 import { Board } from '../board/Board';
+import { MessengerService } from '../messenger.service';
 
 describe('Path Service', () => {
   let pathService: PathService;
   let boardService: BoardService;
+  let messengerService: MessengerService;
   let board: Board;
 
   beforeEach(() => {
     pathService = new PathService();
-    boardService = new BoardService(new Board());
+    messengerService = new MessengerService();
+    boardService = new BoardService(new Board(messengerService));
     board = boardService.createBoard();
   });
 

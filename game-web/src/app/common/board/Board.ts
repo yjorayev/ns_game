@@ -5,6 +5,7 @@ import { IBoardState } from './IBoardState.interface';
 import { IdleState } from './BoardStates';
 import { Injectable } from '@angular/core';
 import { Path } from '../path/path';
+import { MessengerService } from '../messenger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,22 @@ export class Board {
   private _columnLength: number;
   public values: IFigure[][];
 
-  get currentState(){
+  constructor(private _messenger: MessengerService) {
+    this._messenger.onFigureActivated()
+      .subscribe(figure => {
+        this._state = this._state.updateState(figure)
+      });
+
+    this._messenger.onfiguresSwapped()
+      .subscribe(res => {
+        this.setFigure(res.figure1.currentLocation, res.figure1);
+        this.setFigure(res.figure2.currentLocation, res.figure2);
+        this._state = new IdleState();
+      });
+  };
+
+
+  get currentState() {
     return this._state;
   }
 
@@ -44,11 +60,12 @@ export class Board {
     return landResult;
   }
 
-  click(location: ICellLocation){
-    this._state = this._state.updateState(location);
+  click(location: ICellLocation) {
+    const figure = this.getFigure(location);
+    this._state.onClick(this._messenger, figure);
   }
 
-  getPath(toLocation: ICellLocation): Path{
+  getPath(toLocation: ICellLocation): Path {
     return this._state.getPath(toLocation, this);
   }
 

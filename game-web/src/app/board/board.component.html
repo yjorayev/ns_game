@@ -6,10 +6,8 @@
     }"
     (click)="activateFigure(x, y)"
     (mouseover)="updateCurrentPath(x, y)">
-    <ng-container [ngSwitch]="board.values[x][y].type">
-      <div *ngSwitchCase="0" [ngClass]="getCellClass(x, y)">AF</div>
-      <div *ngSwitchCase="1" [ngClass]="getCellClass(x, y)">X</div>
-      <div *ngSwitchCase="2" [ngClass]="getCellClass(x, y)"></div>
+    <ng-container>
+      <div [ngClass]="getCellClass(x, y)">{{board.values[x][y].text}}</div>
     </ng-container>
   </div>
 </div>
