@@ -31,7 +31,7 @@ export class Board {
   };
 
 
-  get currentState() {
+  get currentState(): IBoardState {
     return this._state;
   }
 

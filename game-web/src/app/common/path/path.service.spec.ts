@@ -1,6 +1,6 @@
 import { PathService } from './path.service';
 import { CellLocation } from '../location/Location';
-import { BoardService } from '../../board/board.service';
+import { BoardService } from '../../game/game.service';
 import { NullLocation } from '../location/nullLocation';
 import { Board } from '../board/Board';
 import { MessengerService } from '../messenger.service';
@@ -139,6 +139,11 @@ describe('Path Service', () => {
 
     it('get path from NullLocation should return null', () => {
       const path = pathService.getPath(board, NullLocation.Instance, new CellLocation(1, 1));
+      expect(path).toBeNull();
+    });
+
+    it('get path should return null when from === to', () => {
+      const path = pathService.getPath(board, new CellLocation(1, 1), new CellLocation(1, 1));
       expect(path).toBeNull();
     });
   });

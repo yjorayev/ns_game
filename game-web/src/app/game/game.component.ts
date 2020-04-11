@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CellLocation } from '../common/location/Location';
 import { Path } from '../common/path/path';
-import { BoardService } from './board.service';
+import { BoardService } from './game.service';
 import { Board } from '../common/board/Board';
 @Component({
   selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss']
 })
-export class BoardComponent {
+export class GameComponent {
   private _currentPath: Path;
   public board: Board;
 

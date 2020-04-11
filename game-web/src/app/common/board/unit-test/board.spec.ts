@@ -8,10 +8,10 @@ import { NotMovableFigure } from '../../figure/NotMovableFigure';
 import { Obstacle } from '../../figure/ObstacleFigure';
 import { NullFigure } from '../../figure/NullFigure';
 import { TestBed } from '@angular/core/testing';
+import { Path } from '../../path/path';
 
 describe('Board', () => {
     let board;
-    const messenger = new MessengerService();
 
     beforeEach(() => {
         board = TestBed.inject(Board);
@@ -23,7 +23,9 @@ describe('Board', () => {
 
     describe('movable frog click', () => {
         beforeEach(() => {
-            spyOn(board, 'getFigure').and.returnValue(new Frog(Color.BLUE, new CellLocation(1, 1)));
+            spyOn(board, 'getFigure')
+                .withArgs(new CellLocation(1, 1)).and.returnValue(new Frog(Color.BLUE, new CellLocation(1, 1)))
+                .withArgs(new CellLocation(1, 5)).and.returnValue(new Frog(Color.BLUE, new CellLocation(1, 5)));
         })
 
         it('should change state to ModifyingState on movable frog click', () => {
@@ -32,8 +34,13 @@ describe('Board', () => {
         });
 
         it('should change state to IdleState on second click after movable figure click', () => {
-            board.click(new CellLocation(1, 1));
-            board.click(new CellLocation(1, 5));
+            spyOn(board, 'setFigure');
+            const from = new CellLocation(1, 1);
+            const to = new CellLocation(1, 5);
+
+            board.click(from);
+            board.currentState['_path'] = new Path(from, to);
+            board.click(to);
             expect(board.currentState).toBeInstanceOf(IdleState);
         });
     });

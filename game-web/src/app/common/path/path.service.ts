@@ -23,6 +23,8 @@ export class PathService {
   private takenSteps: StepDescriptor[];
 
   public getPath(boardState: Board, from: ICellLocation, to: ICellLocation): Path {
+    if (from.equals(to)) return null;
+
     this.boardState = boardState;
     this.takenSteps = [];
 
