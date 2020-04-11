@@ -2,13 +2,11 @@ import { IdleState, ModifyingState } from '../BoardStates';
 import { IBoardState } from '../IBoardState.interface';
 import { Frog } from '../../figure/FrogFigure';
 import { Color } from '../../enums/color.enum';
-import { NullLocation } from '../../location/nullLocation';
-import { CellLocation } from '../../location/Location';
-import { Board } from '../Board';
 import { MessengerService } from '../../messenger.service';
 import { PathService } from '../../path/path.service';
 import { TestBed } from '@angular/core/testing';
 import { Path } from '../../path/path';
+import { CellLocation } from '../../location/Location';
 
 describe('Board Modifying State', () => {
     let boardState: IBoardState;

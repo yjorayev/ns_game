@@ -1,13 +1,13 @@
 import { IFigure } from './IFigure.interface';
 import { Color } from '../enums/color.enum';
 import { FigureType } from '../enums/figureTypes.enum';
-import { LandResult } from '../classes/LanDresult';
 import { ICellLocation } from '../location/ICellLocation.interface';
 import { IDirectionDescriptor } from '../directionDescriptor/IDirectionDescriptor.interface';
 import { IMovable } from './IMovableFigure';
 import { MovableFigure } from './MovableFigure';
 import { MessengerService } from '../messenger.service';
 import { NotMovableFigure } from './NotMovableFigure';
+import { LandResult } from '../classes/LandResult';
 
 export class Frog implements IFigure {
   private _movable: IMovable;
