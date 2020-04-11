@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:ci": "npm run clean && npm run test && npm run build:prod",
+    "build:prod": "ng build --prod",
     "clean": "rimraf ./dist"
   },
   "private": true,
