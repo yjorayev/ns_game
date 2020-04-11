@@ -37,3 +37,5 @@ jobs:
       run: |
         npm ci
         npm run build:ci
+      with:
+        path: ~/game-web
