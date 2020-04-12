@@ -28,6 +28,8 @@ export class ModifyingState implements IBoardState {
     onClick(messenger: MessengerService, figure: IFigure) {
         if (this._path && figure.currentLocation.equals(this._path.to)) {
             this._modifyingFigure.moveOn(messenger, figure);
+        } else {
+            messenger.figureActivated(null);
         }
     }
 }

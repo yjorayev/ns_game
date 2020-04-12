@@ -9,30 +9,18 @@ import { ICellLocation } from '../common/location/ICellLocation.interface';
 import { Frog } from '../common/figure/FrogFigure';
 import { Board } from '../common/board/Board';
 import { Path } from '../common/path/path';
-
-const lvlInfo = [
-    { row: 1, col: 1, type: FigureType.FROG, color: Color.RED },
-    { row: 3, col: 5, type: FigureType.FROG, color: Color.RED },
-    { row: 3, col: 6, type: FigureType.FROG, color: Color.RED },
-    { row: 6, col: 2, type: FigureType.FROG, color: Color.RED },
-    { row: 8, col: 1, type: FigureType.FROG, color: Color.RED },
-    { row: 5, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-    { row: 6, col: 4, type: FigureType.OBSTACLE, color: Color.NULL },
-    { row: 2, col: 7, type: FigureType.OBSTACLE, color: Color.NULL },
-    { row: 7, col: 0, type: FigureType.OBSTACLE, color: Color.NULL },
-    { row: 0, col: 4, type: FigureType.OBSTACLE, color: Color.NULL }
-];
+import { lvlInfo, size } from './game-settings';
 
 @Injectable()
 export class BoardService {
     constructor(private _board: Board) { }
 
     createBoard(): Board {
-        this._board.setDimensions(9, 9);
+        this._board.setDimensions(size, size);
         this._board.values = [];
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < size; i++) {
             this._board.values[i] = [];
-            for (let j = 0; j < 9; j++) {
+            for (let j = 0; j < size; j++) {
                 const figure = this.getFigureFromSettings(i, j);
                 this._board.setFigure(new CellLocation(i, j), figure);
             }
@@ -44,7 +32,7 @@ export class BoardService {
         return this._board.getPath(toLocation);
     }
 
-    onBoardClick(location: CellLocation){
+    onBoardClick(location: CellLocation) {
         this._board.click(location);
     }
 
